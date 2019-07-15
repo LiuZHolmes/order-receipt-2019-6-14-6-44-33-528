@@ -24,33 +24,37 @@ public class OrderReceipt {
 
         printsLineItems(output);
 
+        final double taxRate = 0.1;
 
+        printTheStateTax(output,calculateTotalSalesTax(taxRate));
 
-        // prints the state tax
-        printsTheStateTax(output);
+        printTotalAmount(output,calculateTotalAmountOfLineItems(taxRate));
 
-        // print total amount
-        printTotalAmount(output);
         return output.toString();
     }
 
-    private void printTotalAmount(StringBuilder output) {
-        double tot = o.getLineItems().stream()
-                .mapToDouble(x -> x.totalAmount() + x.totalAmount() *  .10).sum();
-        output.append("Total Amount").append('\t').append(tot);
+    private void printTotalAmount(StringBuilder output,double totalAmountOfLineItems) {
+        output.append("Total Amount").append('\t').append(totalAmountOfLineItems);
     }
 
-    private void printsTheStateTax(StringBuilder output) {
-        double totSalesTx = o.getLineItems().stream()
-                .mapToDouble(x -> x.totalAmount() *  .10).sum();
-        output.append("Sales Tax").append('\t').append(totSalesTx);
+    private double calculateTotalAmountOfLineItems(double taxRate) {
+        return o.getLineItems().stream()
+                .mapToDouble(x -> x.totalAmount() + x.totalAmount() *  taxRate).sum();
+    }
+
+    private void printTheStateTax(StringBuilder output,double totalSalesTax) {
+        output.append("Sales Tax").append('\t').append(totalSalesTax);
+    }
+
+    public double calculateTotalSalesTax(double taxRate) {
+        return o.getLineItems().stream()
+                .mapToDouble(x -> x.totalAmount() *  taxRate).sum();
     }
 
     private void printsLineItems(StringBuilder output) {
         output.append(o.getLineItems().stream()
                 .map(x -> String.format("%s\t%.1f\t%d\t%.1f",x.getDescription(),x.getPrice(),x.getQuantity(),x.totalAmount()))
-                .collect(Collectors.joining("\n")));
-        output.append("\n");
+                .collect(Collectors.joining("\n"))).append("\n");
     }
 
     private void printCustomer(StringBuilder output) {
