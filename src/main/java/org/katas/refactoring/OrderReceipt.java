@@ -1,5 +1,7 @@
 package org.katas.refactoring;
 
+import java.util.stream.Collectors;
+
 /**
  * OrderReceipt prints the details of order including customer name, address, description, quantity,
  * price and amount. It also calculates the sales tax @ 10% and prints as part
@@ -18,39 +20,42 @@ public class OrderReceipt {
 
         printHeader(output);
 
-        // print date, bill no, customer name
-//        output.append("Date - " + order.getDate();
-        output.append(o.getCustomerName());
-        output.append(o.getCustomerAddress());
-//        output.append(order.getCustomerLoyaltyNumber());
+        printCustomer(output);
 
-        // prints lineItems
-        double totSalesTx = 0d;
-        double tot = 0d;
-        for (LineItem lineItem : o.getLineItems()) {
-            output.append(lineItem.getDescription());
-            output.append('\t');
-            output.append(lineItem.getPrice());
-            output.append('\t');
-            output.append(lineItem.getQuantity());
-            output.append('\t');
-            output.append(lineItem.totalAmount());
-            output.append('\n');
+        printsLineItems(output);
 
-            // calculate sales tax @ rate of 10%
-            double salesTax = lineItem.totalAmount() * .10;
-            totSalesTx += salesTax;
 
-            // calculate total amount of lineItem = price * quantity + 10 % sales tax
-            tot += lineItem.totalAmount() + salesTax;
-        }
 
         // prints the state tax
-        output.append("Sales Tax").append('\t').append(totSalesTx);
+        printsTheStateTax(output);
 
         // print total amount
-        output.append("Total Amount").append('\t').append(tot);
+        printTotalAmount(output);
         return output.toString();
+    }
+
+    private void printTotalAmount(StringBuilder output) {
+        double tot = o.getLineItems().stream()
+                .mapToDouble(x -> x.totalAmount() + x.totalAmount() *  .10).sum();
+        output.append("Total Amount").append('\t').append(tot);
+    }
+
+    private void printsTheStateTax(StringBuilder output) {
+        double totSalesTx = o.getLineItems().stream()
+                .mapToDouble(x -> x.totalAmount() *  .10).sum();
+        output.append("Sales Tax").append('\t').append(totSalesTx);
+    }
+
+    private void printsLineItems(StringBuilder output) {
+        output.append(o.getLineItems().stream()
+                .map(x -> String.format("%s\t%.1f\t%d\t%.1f",x.getDescription(),x.getPrice(),x.getQuantity(),x.totalAmount()))
+                .collect(Collectors.joining("\n")));
+        output.append("\n");
+    }
+
+    private void printCustomer(StringBuilder output) {
+        output.append(o.getCustomerName());
+        output.append(o.getCustomerAddress());
     }
 
     private void printHeader(StringBuilder output) {
