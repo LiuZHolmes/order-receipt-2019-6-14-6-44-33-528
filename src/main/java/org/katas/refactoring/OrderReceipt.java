@@ -30,9 +30,9 @@ public class OrderReceipt {
     }
 
     private void printAfterLineItems(StringBuilder output) {
-        printTheStateTax(output,calculateTotalSalesTax());
+        printTheStateTax(output, calculateTotalSalesTax());
 
-        printTotalAmount(output,calculateTotalAmountOfLineItems());
+        printTotalAmount(output, calculateTotalAmountOfLineItems());
     }
 
     private void printBeforeLineItems(StringBuilder output) {
@@ -41,27 +41,27 @@ public class OrderReceipt {
         printCustomer(output);
     }
 
-    private void printTotalAmount(StringBuilder output,double totalAmountOfLineItems) {
+    private void printTotalAmount(StringBuilder output, double totalAmountOfLineItems) {
         output.append("Total Amount").append('\t').append(totalAmountOfLineItems);
     }
 
     private double calculateTotalAmountOfLineItems() {
         return o.getLineItems().stream()
-                .mapToDouble(x -> x.totalAmount() + x.totalAmount() *  TAXRATE).sum();
+                .mapToDouble(x -> x.totalAmount() + x.totalAmount() * TAXRATE).sum();
     }
 
-    private void printTheStateTax(StringBuilder output,double totalSalesTax) {
+    private void printTheStateTax(StringBuilder output, double totalSalesTax) {
         output.append("Sales Tax").append('\t').append(totalSalesTax);
     }
 
     public double calculateTotalSalesTax() {
         return o.getLineItems().stream()
-                .mapToDouble(x -> x.totalAmount() *  TAXRATE).sum();
+                .mapToDouble(x -> x.totalAmount() * TAXRATE).sum();
     }
 
     private void printsLineItems(StringBuilder output) {
         output.append(o.getLineItems().stream()
-                .map(x -> String.format("%s\t%.1f\t%d\t%.1f",x.getDescription(),x.getPrice(),x.getQuantity(),x.totalAmount()))
+                .map(x -> String.format("%s\t%.1f\t%d\t%.1f", x.getDescription(), x.getPrice(), x.getQuantity(), x.totalAmount()))
                 .collect(Collectors.joining("\n"))).append("\n");
     }
 
