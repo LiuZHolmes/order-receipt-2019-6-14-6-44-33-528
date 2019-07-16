@@ -20,18 +20,25 @@ public class OrderReceipt {
     public String printReceipt() {
         StringBuilder output = new StringBuilder();
 
-        printHeader(output);
-
-        printCustomer(output);
+        printBeforeLineItems(output);
 
         printsLineItems(output);
 
+        printAfterLineItems(output);
 
+        return output.toString();
+    }
+
+    private void printAfterLineItems(StringBuilder output) {
         printTheStateTax(output,calculateTotalSalesTax());
 
         printTotalAmount(output,calculateTotalAmountOfLineItems());
+    }
 
-        return output.toString();
+    private void printBeforeLineItems(StringBuilder output) {
+        printHeader(output);
+
+        printCustomer(output);
     }
 
     private void printTotalAmount(StringBuilder output,double totalAmountOfLineItems) {
