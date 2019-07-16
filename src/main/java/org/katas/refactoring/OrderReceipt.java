@@ -58,8 +58,7 @@ public class OrderReceipt {
     }
 
     private void printCustomer(StringBuilder output) {
-        output.append(o.getCustomerName());
-        output.append(o.getCustomerAddress());
+        output.append(o.getCustomerName()).append(o.getCustomerAddress());
     }
 
     private void printHeader(StringBuilder output) {
