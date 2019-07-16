@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 public class OrderReceipt {
     private Order o;
 
+    private final double TAXRATE = 0.1;
+
     public OrderReceipt(Order o) {
         this.o = o;
     }
@@ -24,11 +26,10 @@ public class OrderReceipt {
 
         printsLineItems(output);
 
-        final double taxRate = 0.1;
 
-        printTheStateTax(output,calculateTotalSalesTax(taxRate));
+        printTheStateTax(output,calculateTotalSalesTax());
 
-        printTotalAmount(output,calculateTotalAmountOfLineItems(taxRate));
+        printTotalAmount(output,calculateTotalAmountOfLineItems());
 
         return output.toString();
     }
@@ -37,18 +38,18 @@ public class OrderReceipt {
         output.append("Total Amount").append('\t').append(totalAmountOfLineItems);
     }
 
-    private double calculateTotalAmountOfLineItems(double taxRate) {
+    private double calculateTotalAmountOfLineItems() {
         return o.getLineItems().stream()
-                .mapToDouble(x -> x.totalAmount() + x.totalAmount() *  taxRate).sum();
+                .mapToDouble(x -> x.totalAmount() + x.totalAmount() *  TAXRATE).sum();
     }
 
     private void printTheStateTax(StringBuilder output,double totalSalesTax) {
         output.append("Sales Tax").append('\t').append(totalSalesTax);
     }
 
-    public double calculateTotalSalesTax(double taxRate) {
+    public double calculateTotalSalesTax() {
         return o.getLineItems().stream()
-                .mapToDouble(x -> x.totalAmount() *  taxRate).sum();
+                .mapToDouble(x -> x.totalAmount() *  TAXRATE).sum();
     }
 
     private void printsLineItems(StringBuilder output) {
